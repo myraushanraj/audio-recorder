@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Rec Audio</title>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
+<style>
+  * {
+	 margin: 0;
+	 padding: 0;
+	 box-sizing: border-box;
+	 font-family: 'Roboto', sans-serif;
+	 outline-style: none;
+}
+ body {
+	 display: flex;
+	 flex-flow: column;
+	 justify-content: center;
+	 align-items: center;
+	 height: 100vh;
+	 color: #007bff;
+}
+ .player-icon {
+	 color: #007bff;
+	 margin-right: 5px;
+}
+ .player-icon:hover {
+	 color: #000;
+}
+ .container {
+	 background: #fff;
+	 height: 70px;
+	 width: 70px;
+	 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+	 border-radius: 50%;
+}
+ .header-player {
+	 width: 100%;
+	 padding: 10px;
+	 display: grid;
+	 grid-template-columns: 60px auto;
+}
+ .header-player .audio-record {
+	 display: flex;
+	 align-items: center;
+}
+ .header-player .audio-record i {
+	 color: #007bff;
+	 font-size: 50px;
+	 cursor: pointer;
+	 padding: 1px;
+}
+ .header-player .audio-record input[type=checkbox] {
+	 position: absolute;
+	 visibility: hidden;
+}
+ .header-player .audio-record input[type=checkbox]:checked ~ label i {
+	 color: #fff;
+	 background: #007bff;
+	 border-radius: 100%;
+	 animation: shadow-expansion 0.9s ease-in-out infinite alternate;
+}
+ .header-player .audio-properties .audio_record-control {
+	 width: 100%;
+	 display: flex;
+	 flex-flow: row nowrap;
+}
+ .header-player .audio-properties .audio_record-control .audio-overwrite {
+	 flex-grow: 2;
+	 font-size: 11px;
+	 font-weight: regular;
+	 padding-top: 6px;
+	 text-align: right;
+}
+ .header-player .audio-properties .audio_record-control .audio-overwrite > label {
+	 padding-right: 10px;
+}
+ .header-player .switch {
+	 position: relative;
+	 display: inline-block;
+	 width: 36px;
+	 height: 14px;
+	 float: right;
+}
+ .header-player .switch label {
+	 font-size: 12px;
+	 font-weight: regular;
+	 float: left;
+}
+ .header-player .switch input {
+	 display: none;
+}
+ .header-player .slider {
+	 position: absolute;
+	 cursor: pointer;
+	 top: 0;
+	 left: 0;
+	 right: 0;
+	 bottom: 0;
+	 background-color: rgba(0, 123, 255, 0.26);
+	 -webkit-transition: 0.4s;
+	 transition: 0.4s;
+	 border-radius: 20px;
+}
+ .header-player .slider:before {
+	 position: absolute;
+	 content: "";
+	 height: 20px;
+	 width: 20px;
+	 left: -2px;
+	 bottom: -2.5px;
+	 background-color: #f1f1f1;
+	 -webkit-transition: 0.4s;
+	 transition: 0.4s;
+	 border-radius: 100%;
+	 box-shadow: 0px 2px 2px rgba(0, 123, 255, 0.24);
+}
+ .header-player input:checked + .slider {
+	 background-color: #99caff;
+}
+ .header-player input:checked + .slider::before {
+	 background-color: #007bff;
+}
+ .header-player input:focus + .slider {
+	 box-shadow: 0 0 1px #007bff;
+}
+ .header-player input:checked + .slider:before {
+	 -webkit-transform: translateX(20px);
+	 -ms-transform: translateX(20px);
+	 transform: translateX(20px);
+}
+ .header-player .player-bar {
+	 font-size: 14px;
+	 font-weight: bold;
+	 width: 100%;
+	 display: flex;
+	 flex-flow: row nowrap;
+	 margin: 10px 0;
+}
+ @keyframes shadow-expansion {
+	 from {
+		 box-shadow: 0 0 0 5px #007bff;
+	}
+	 to {
+		 box-shadow: 0 0 0 0 #007bff;
+	}
+}
+ .by {
+	 font-family: sans-serif;
+	 position: fixed;
+	 bottom: 20px;
+	 text-align: center;
+	 width: 100%;
+	 font-size: 10px;
+}
+ .by a {
+	 text-decoration: none;
+	 color: #007bff;
+	 transition: all 0.5s;
+}
+ .by a:hover {
+	 color: #0062cc;
+}
+ button {
+	 background-color: transparent;
+	 border: none;
+	 cursor: pointer;
+}
+ #clicks {
+	 border-radius: 50%;
+	 background-color: red;
+	 width: 20px;
+	 height: 15px;
+	 position: absolute;
+	 display: none;
+}
+ .save {
+	 position: relative;
+	 left: 0px;
+	 top: -20px;
+	 z-index: 100;
+}
+
+
+
+</style>
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="container">
+  <div class="player">
+    <div class="header-player">
+      <div class="audio-record">
+        <input type="checkbox" id="audio_record-icon" name="audio_record-icon">
+        <label for="audio_record-icon" class="player-icon audio_record-icon">
+          <i class="material-icons" title="microfono">mic</i>
+        </label>
+      </div>
+      <!-- <div class="audio-properties">              
+        <div class="audio_record-control">         
+          <button class="btn btn-default player-icon save" id="save-recording" onclick="saveRecording();">
+              <i class="material-icons">save</i>
+          </button>
+        </div>
+      </div> -->
+
+      <div class="" style="position:absolute;bottom:50px">              
+        <div class="audio_record-control">         
+          <a style="font-size:20px;" href="javascript:void(0)" id="save-recording" onclick="saveRecording();">
+              Save recording
+          </button>
+        </div>
+      </div>
+      
+    </div>
+    
+  </div>
+</div>
+<div id="record-audio"></div>
+<span id="clicks"></span>
+
+
+<!--
+<div class="container">
+  <div class="player">
+    <div class="header-player">
+      <div class="video-record">
+        <input type="checkbox" id="audio_record-icon" name="video_record-icon">
+        <label for="video_record-icon" class="player-icon video_record-icon">
+          <i class="material-icons" title="gravar video">mic</i>
+        </label>
+      </div>
+      <div class="video-properties">              
+        <div class="video_record-control">         
+          <button class="btn btn-default player-icon save" id="save-recording" onclick="">
+              <i class="material-icons">save</i>
+          </button>
+        </div>
+      </div>
+      
+    </div>
+    
+  </div>
+</div>-->
+<!-- partial -->
+  <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<script src='https://cdn.WebRTC-Experiment.com/MediaStreamRecorder.js'></script>
+<script>
+   function captureUserMedia(mediaConstraints, successCallback, errorCallback) {
+    navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
+  }
+
+  var mediaConstraints = {
+    audio: true
+  };
+  document.querySelector('#save-recording').onclick = function () {
+      this.disabled = true;
+      mediaRecorder.save();
+      // alert('Drop WebM file on Chrome or Firefox. Both can play entire file. VLC player or other players may not work.');
+  };
+  //Parto con la registrazione audio
+  function startRecording(idx) {
+    
+    $('#start-recording').disabled = true;
+    audiosContainer = document.getElementById('audios-container');
+    //document.getElementById("clicks").innerHTML = "Recording Started";
+
+    var f = document.getElementById('clicks');
+    setInterval(function () {
+        f.style.display = (f.style.display == 'none' ? '' : 'none');
+    }, 1000);
+
+    captureUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
+  };
+  //Stoppo la registrazione audio
+  function stopRecording() {
+      $('#stop-recording').disabled = true;
+   
+      //document.getElementById("clicks").innerHTML = "Recording Stopped";
+
+      var f = document.getElementById('clicks');
+      setInterval(function () {
+          f.style.display = (f.style.display == 'none' ? '' : 'none');
+      }, 1000);
+    mediaRecorder.stop();
+    mediaRecorder.stream.stop();
+   
+   
+    $('.start-recording').disabled = false;
+  };
+
+  //Falvo Il file
+  function saveRecording() {
+      mediaRecorder.save();
+  };
+
+  var mediaRecorder;
+
+  function onMediaSuccess(stream) {
+    mediaRecorder = new MediaStreamRecorder(stream);
+    mediaRecorder.stream = stream;
+    mediaRecorder.mimeType = 'audio/wav';  
+    //mediaRecorder.mimeType = 'audio/webm';  
+    mediaRecorder.audioChannels = 1;
+
+    mediaRecorder.ondataavailable = function(blob) {
+      console.log("blob data",blob);
+
+
+
+
+      var data = new FormData();
+      data.append('file', blob);
+
+      $.ajax({
+        url :  "http://localhost:8081/upload",
+        type: 'POST',
+        data: data,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+          alert("Audio uploaded !");
+        },    
+        error: function() {
+         
+        }
+      });
+
+
+
+
+
+
+
+
+
+
+
+
+      // $('#record-audio').html("<audio controls=''><source src=" + URL.createObjectURL(blob) + "></source></audio>");
+    };
+
+    var timeInterval = 360 * 1000;
+
+    mediaRecorder.start(timeInterval);
+
+    $('#stop-recording').disabled = false;
+  }
+
+  function onMediaError(e) {
+    console.error('media error', e);
+  }
+
+  function bytesToSize(bytes) {
+    var k = 1000;
+    var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes === 0) return '0 Bytes';
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(k)), 10);
+    return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+  }
+
+  function getTimeLength(milliseconds) {
+    var data = new Date(milliseconds);
+    return data.getUTCHours() + " hours, " + data.getUTCMinutes() + " minutes and " + data.getUTCSeconds() + " second(s)";
+  }
+
+  window.onbeforeunload = function() {
+    $('#start-recording').disabled = false;
+  };
+
+
+$(document).on('click','input[name="audio_record-icon"]',function(){
+  var checked = $('#audio_record-icon').prop('checked'); 
+  if(checked == true)
+    {
+        startRecording();
+        console.log('start');
+    }
+  else
+    {
+        stopRecording();
+        console.log('stop');
+      
+    }
+});
+</script>
+
+</body>
+</html>
